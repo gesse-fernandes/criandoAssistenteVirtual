@@ -1,7 +1,7 @@
 import speech_recognition as sr
 import re
 import pyttsx3 
-
+import os
 
 nome = ""
 
@@ -18,7 +18,8 @@ while True:
             mic.adjust_for_ambient_noise(source=source)
 
             print("Vamos Começar fale Alguma Coisa....")
-
+            speek.say("Vamos Começar fale Alguma Coisa")
+            speek.runAndWait()
             audio = mic.listen(source=source)
             try:
                 frase = mic.recognize_google(audio,language='pt-BR')
@@ -34,6 +35,10 @@ while True:
                     print("Seu nome é "+nome)
                     speek.say("Nome falado foi "+nome)
                     speek.runAndWait()
+                elif re.search(r'\b'+"programa"+r'\b',format(frase)):
+                   speek.say("você encerrou")
+                   speek.runAndWait()
+                   os._exit(0)
 
                 print("Você falou: "+ frase)
                 speek.say("você falou: "+format(frase))
