@@ -2,7 +2,7 @@ import speech_recognition as sr
 import re
 import pyttsx3 
 import os
-
+import requests
 nome = ""
 
 
@@ -24,11 +24,28 @@ while True:
             try:
                 frase = mic.recognize_google(audio,language='pt-BR')
                 
-                if re.search(r'\b'+"ajuda"+r'\b',format(frase)):
-                    speek.say("Ajuda")
-                    speek.runAndWait()
+                if re.search(r'\b'+"gostaria de saber os preços da Ceasa de Tianguá"+r'\b',format(frase)):
+                    r = requests.get("https://contweb.net.br/ceasa-es-server/api/cotacaoGeralFrutasTiangua", verify=True ,headers={'User-Agent': "Magic Browser"})
+                    prices = r.json()
+                    tam = len(prices)
+                    i =0
+                    while i < tam:
+
+                        speek.say("O nome é "+ format(prices[i]["nome"]))
+                        speek.runAndWait()
+                        speek.say("o Preço minimo é "+ format(prices[i]["min"]))
+                        speek.runAndWait()
+                        speek.say("o Preço médio é "+ format(prices[i]["mc"]))
+                        speek.runAndWait()
+                        speek.say("o Preço Máximo é "+ format(prices[i]["max"]))
+                        speek.runAndWait()
+                             
+
+                        i+=1
+
                     
                     print("Algo relacionado a ajuda.")
+                
                 elif re.search(r'\b'+"meu nome é "+r'\b',format(frase)):
                     t = re.search('meu nome é (.*)',format(frase))
                     nome = t.group(1)
